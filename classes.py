@@ -11,39 +11,33 @@ class TextArg(object):
         return str(self.number)
 
 class DataModel(object):
-    def __init__(self,cost):
+    def __init__(self,cost,text:str,formatters:dict={}):
         self.cost = cost
-        self.text={}
-        self.formatters={}
-
-    def add_text(self,locale:str,text:str,formatters:list=[]):
-        self.text[locale]=text+' '
-        self.formatters[locale]=formatters
+        self.text=text+' '
+        self.formatters=formatters
 
 class Data(object):
     def __init__(self,dataModel,*args):
         self.dataModel=dataModel
         self.args=args
         self.cost=dataModel.cost(*args)
-        self.create_text()
-
-    def create_text(self):
         self.text={}
-        for locale in self.dataModel.text:
-            textArgs=[""]
-            textModel=self.dataModel.text[locale]
-            formatters=self.dataModel.formatters[locale]
-            for arg in self.args:
-                textArg=TextArg(arg)
-                for key in formatters:
-                    setattr(textArg,key,formatters[key](arg))
-                textArgs.append(textArg)
-            self.text[locale]=textModel.format(*textArgs)
+        textArgs=[""]
+        textModel=self.dataModel.text
+        formatters=self.dataModel.formatters
+        for arg in self.args:
+            textArg=TextArg(arg)
+            for key in formatters:
+                setattr(textArg,key,formatters[key](arg))
+            textArgs.append(textArg)
+        self.text=textModel.format(*textArgs)
 
 class NoData(object):
     def __init__(self):
-        self.cost=None
         self.args=[None]
+        self.cost=0
+        self.text=""
+        self.formatters={}
 noData=NoData()
 
 class EffectModel(object):
@@ -59,22 +53,17 @@ class Effect(object):
         self.args=args
         self.targetting=targetting
         self.cost=dataModel.cost(targetting.cost,*args)
-        self.create_text()
-
-    def create_text(self):
-        self.text={}
-        for locale in self.dataModel.text:
-            textModel=self.dataModel.text[locale]
-            formatters=self.dataModel.formatters[locale]
-            textArgs=[]
-            # the last argument of the targetting is onsidered to be the number of targets
-            args=[self.targetting.args[-1]]+list(self.args)
-            for arg in args:
-                textArg=TextArg(arg)
-                for key in formatters:
-                    setattr(textArg,key,formatters[key](arg))
-                textArgs.append(textArg)
-            self.text[locale]=textModel.format(*textArgs)
+        textModel=self.dataModel.text
+        formatters=self.dataModel.formatters
+        textArgs=[]
+        # the last argument of the targetting is considered to be the number of targets
+        args=[self.targetting.args[-1]]+list(self.args)
+        for arg in args:
+            textArg=TextArg(arg)
+            for key in formatters:
+                setattr(textArg,key,formatters[key](arg))
+            textArgs.append(textArg)
+        self.text=textModel.format(*textArgs)
 
 class Ability(object):
     def __init__(self, actCondition=noData,actCost=noData,targetting=noData, *effectModels):
@@ -91,13 +80,10 @@ class Ability(object):
         cost-=actCondition.cost
         cost-=actCost.cost
         self.cost=cost
-        self.text={}
-
-    def create_text(self,locale):
         text=""
-        text+=self.actCondition.text[locale]
-        text+=self.actCost.text[locale]
-        text+=self.targetting.text[locale]
+        text+=self.actCondition.text
+        text+=self.actCost.text
+        text+=self.targetting.text
         for effect in self.effects:
-            text+=effect.text[locale]
-        self.text[locale]=text
+            text+=effect.text
+        self.text=text
