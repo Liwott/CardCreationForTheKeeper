@@ -10,21 +10,21 @@ class TextArg(object):
     def __str__(self):
         return str(self.number)
 
-class DataModel(object):
+class ComponentModel(object):
     def __init__(self,cost,text:str,formatters:dict={}):
         self.cost = cost
         self.text=text+' '
         self.formatters=formatters
 
-class Data(object):
-    def __init__(self,dataModel,*args):
-        self.dataModel=dataModel
+class Component(object):
+    def __init__(self,componentModel,*args):
+        self.componentModel=componentModel
         self.args=args
-        self.cost=dataModel.cost(*args)
+        self.cost=componentModel.cost(*args)
         self.text={}
         textArgs=[""]
-        textModel=self.dataModel.text
-        formatters=self.dataModel.formatters
+        textModel=self.componentModel.text
+        formatters=self.componentModel.formatters
         for arg in self.args:
             textArg=TextArg(arg)
             for key in formatters:
@@ -32,32 +32,32 @@ class Data(object):
             textArgs.append(textArg)
         self.text=textModel.format(*textArgs)
 
-class NoData(object):
+class NoComponent(object):
     def __init__(self):
         self.args=[None]
         self.cost=0
         self.text=""
         self.formatters={}
-noData=NoData()
+noComponent=NoComponent()
 
 class EffectModel(object):
-    def __init__(self,dataModel,*args):
-        self.dataModel=dataModel
+    def __init__(self,componentModel,*args):
+        self.componentModel=componentModel
         self.args=args
 
 class Effect(object):
-    def __init__(self,effectModel,targetting=noData):
-        dataModel=effectModel.dataModel
-        self.dataModel=dataModel
+    def __init__(self,effectModel,targetSelection=noComponent):
+        componentModel=effectModel.componentModel
+        self.componentModel=componentModel
         args=effectModel.args
         self.args=args
-        self.targetting=targetting
-        self.cost=dataModel.cost(targetting.cost,*args)
-        textModel=self.dataModel.text
-        formatters=self.dataModel.formatters
+        self.targetSelection=targetSelection
+        self.cost=componentModel.cost(targetSelection.cost,*args)
+        textModel=self.componentModel.text
+        formatters=self.componentModel.formatters
         textArgs=[]
-        # the last argument of the targetting is considered to be the number of targets
-        args=[self.targetting.args[-1]]+list(self.args)
+        # the last argument of the targetSelection is considered to be the number of targets
+        args=[self.targetSelection.args[-1]]+list(self.args)
         for arg in args:
             textArg=TextArg(arg)
             for key in formatters:
@@ -66,14 +66,14 @@ class Effect(object):
         self.text=textModel.format(*textArgs)
 
 class Ability(object):
-    def __init__(self, actCondition=noData,actCost=noData,targetting=noData, *effectModels):
+    def __init__(self, actCondition=noComponent,actCost=noComponent,targetSelection=noComponent, *effectModels):
         self.actCondition=actCondition
         self.actCost=actCost
-        self.targetting=targetting
+        self.targetSelection=targetSelection
         effects=[]
         cost=0
         for effectModel in effectModels:
-            effect=Effect(effectModel,targetting)
+            effect=Effect(effectModel,targetSelection)
             effects.append(effect)
             cost+=effect.cost
         self.effects=effects
@@ -83,7 +83,7 @@ class Ability(object):
         text=""
         text+=self.actCondition.text
         text+=self.actCost.text
-        text+=self.targetting.text
+        text+=self.targetSelection.text
         for effect in self.effects:
             text+=effect.text
         self.text=text
