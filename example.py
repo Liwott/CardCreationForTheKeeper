@@ -1,13 +1,9 @@
 import classes as c
+c.TextArg.formatters={'s':{1:'',2:'s'},'are':{1:'is',2:'are'},'all_targets':{1:'the target',2:'all targets'}}
 
 print("Spell Card : Black Death")
 # print("Activation Condition")
-def format_are(n):
-    if n==1:
-        return "is"
-    else:
-        return "are"
-exActConditionModel=c.ComponentModel(lambda x : x,"Activate when at least {1} of your cards in play (excluding this card) {1.are} destroyed.",{"are":format_are})
+exActConditionModel=c.ComponentModel(lambda x : x,"Activate when at least {1} of your cards in play (excluding this card) {1.are} destroyed.")
 exActCondition=c.Component(exActConditionModel,1)
 # print("cost : ",exActCondition.cost)
 # print("EN : ",exActCondition.text)
@@ -25,12 +21,7 @@ exTargetSelection=c.Component(exTargetSelectionModel,4)
 # print("EN : ",exTargetSelection.text)
 
 # print("Effect")
-def format_alltargets(n):
-    if n==1:
-        return "the target"
-    else:
-        return "all targets"
-exEffectComponentModel=c.ComponentModel(lambda x: 8*x,"Destroy {0.alltargets}.",{"alltargets":format_alltargets})
+exEffectComponentModel=c.ComponentModel(lambda x: 8*x,"Destroy {0.all_targets}.")
 exEffectModel=c.EffectModel(exEffectComponentModel)
 exEffect=c.Effect(exEffectModel,exTargetSelection)
 # print("cost : ",exEffect.cost)

@@ -1,20 +1,26 @@
 class TextArg(object):
     """Used as argument for text formatting"""
+    formatters={'s':{1:'',2:'s'}}
+
     def __init__(self,number:int):
         self.number=number
-        if number == 1:
-            self.s=""
-        else:
-            self.s="s"
 
     def __str__(self):
         return str(self.number)
 
+    def __getattr__(self,attr):
+        if attr in TextArg.formatters:
+            if self.number == 1:
+                return TextArg.formatters[attr][1]
+            else:
+                return TextArg.formatters[attr][2]
+        else:
+            return '{{'+attr+'}}'
+
 class ComponentModel(object):
-    def __init__(self,cost,text:str,formatters:dict={}):
+    def __init__(self,cost,text:str):
         self.cost = cost
         self.text=text+' '
-        self.formatters=formatters
 
 class Component(object):
     def __init__(self,componentModel,*args):
@@ -22,22 +28,16 @@ class Component(object):
         self.args=args
         self.cost=componentModel.cost(*args)
         self.text={}
-        textArgs=[""]
         textModel=self.componentModel.text
-        formatters=self.componentModel.formatters
-        for arg in self.args:
-            textArg=TextArg(arg)
-            for key in formatters:
-                setattr(textArg,key,formatters[key](arg))
-            textArgs.append(textArg)
-        self.text=textModel.format(*textArgs)
+        textArgs=map(TextArg,list(args))
+        # argument 0 is empty and sould not be used in formatting
+        self.text=textModel.format(None,*textArgs)
 
 class NoComponent(object):
     def __init__(self):
         self.args=[None]
         self.cost=0
         self.text=""
-        self.formatters={}
 noComponent=NoComponent()
 
 class EffectModel(object):
@@ -54,15 +54,8 @@ class Effect(object):
         self.targetSelection=targetSelection
         self.cost=componentModel.cost(targetSelection.cost,*args)
         textModel=self.componentModel.text
-        formatters=self.componentModel.formatters
-        textArgs=[]
         # the last argument of the targetSelection is considered to be the number of targets
-        args=[self.targetSelection.args[-1]]+list(self.args)
-        for arg in args:
-            textArg=TextArg(arg)
-            for key in formatters:
-                setattr(textArg,key,formatters[key](arg))
-            textArgs.append(textArg)
+        textArgs=map(TextArg,[self.targetSelection.args[-1]]+list(args))
         self.text=textModel.format(*textArgs)
 
 class Ability(object):
