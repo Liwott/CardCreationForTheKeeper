@@ -1,6 +1,6 @@
 class TextArg(object):
     """Used as argument for text formatting"""
-    formatters={'s':{1:'',2:'s'}}
+    formatters={'s':{'1':'','2':'s'}}
 
     def __init__(self,number:int):
         self.number=number
@@ -11,9 +11,9 @@ class TextArg(object):
     def __getattr__(self,attr):
         if attr in TextArg.formatters:
             if self.number == 1:
-                return TextArg.formatters[attr][1]
+                return TextArg.formatters[attr]['1']
             else:
-                return TextArg.formatters[attr][2]
+                return TextArg.formatters[attr]['2']
         else:
             return '{{'+attr+'}}'
 

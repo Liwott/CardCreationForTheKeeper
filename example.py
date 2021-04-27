@@ -1,5 +1,8 @@
 import classes as c
-c.TextArg.formatters={'s':{1:'',2:'s'},'are':{1:'is',2:'are'},'all_targets':{1:'the target',2:'all targets'}}
+import json
+formattersFile=open('Formatters/EN.json')
+c.TextArg.formatters=json.load(formattersFile)
+formattersFile.close()
 
 print("Spell Card : Black Death")
 exActConditionModel=c.ComponentModel(lambda x : x,"Activate when at least {1} of your cards in play (excluding this card) {1.are} destroyed.")
