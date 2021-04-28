@@ -1,3 +1,5 @@
+import math
+
 class TextArg(object):
     """Used as argument for text formatting"""
     formatters={'s':{'1':'','2':'s'}}
@@ -72,7 +74,7 @@ class Ability(object):
         self.effects=effects
         cost-=actCondition.cost
         cost-=actCost.cost
-        self.cost=cost
+        self.cost=max(1,cost)
         text=""
         text+=self.actCondition.text
         text+=self.actCost.text
@@ -80,3 +82,19 @@ class Ability(object):
         for effect in self.effects:
             text+=effect.text
         self.text=text
+
+class BareSpellCard(object):
+    def __init__(self,ability):
+        self.ability=ability
+        self.cost=max(1,math.ceil(ability.cost))
+
+class BareCreatureCard(object):
+    def __init__(self,offense:int,defense:int,caveat=noComponent,*abilities):
+        self.offense=offense
+        self.defense=defense
+        self.caveat=caveat
+        self.abilities=abilities
+        cost=max(0,offense+(defense/5)-caveat.cost)
+        for ability in abilities:
+            cost+=ability.cost
+        self.cost=max(1,math.ceil(cost))

@@ -4,7 +4,7 @@ formattersFile=open('Formatters/EN.json')
 c.TextArg.formatters=json.load(formattersFile)
 formattersFile.close()
 
-print("Spell Card : Black Death")
+print("Ability : Black Death")
 exActConditionModel=c.ComponentModel(lambda x : x,"Activate when at least {1} of your cards in play (excluding this card) {1.are} destroyed.")
 exActCondition=c.Component(exActConditionModel,1)
 
@@ -22,7 +22,15 @@ exAbility=c.Ability(exActCondition,exActCost,exTargetSelection,exEffectModel)
 print("cost : ",exAbility.cost)
 print(exAbility.text)
 
-print("Spell Card : Free Black Death")
-exAbility=c.Ability(c.noComponent,c.noComponent,exTargetSelection,exEffectModel)
-print("cost : ",exAbility.cost)
-print(exAbility.text)
+print("Ability : Free Black Death")
+freeAbility=c.Ability(c.noComponent,c.noComponent,exTargetSelection,exEffectModel)
+print("cost : ",freeAbility.cost)
+print(freeAbility.text)
+
+print("Bare Spell Card : Black Death")
+exBareSpellCard=c.BareSpellCard(exAbility)
+print("cost : ",exBareSpellCard.cost)
+
+print("Bare Creature Card : Black Killer")
+exBareCreatureCard=c.BareCreatureCard(6,20,c.noComponent,exAbility)
+print("cost : ",exBareCreatureCard.cost)
