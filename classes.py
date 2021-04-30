@@ -19,21 +19,13 @@ class TextArg(object):
         else:
             return '{{'+attr+'}}'
 
-class ComponentModel(object):
-    def __init__(self,cost,text:str):
-        self.cost = cost
-        self.text=text+' '
-
 class Component(object):
-    def __init__(self,componentModel,*args):
-        self.componentModel=componentModel
+    def __init__(self,text:str,cost,*args):
         self.args=args
-        self.cost=componentModel.cost(*args)
-        self.text={}
-        textModel=self.componentModel.text
+        self.cost=cost(*args)
         textArgs=map(TextArg,list(args))
         # argument 0 is empty and sould not be used in formatting
-        self.text=textModel.format(None,*textArgs)
+        self.text=text.format(None,*textArgs)+' '
 
 class NoComponent(object):
     def __init__(self):
@@ -43,21 +35,19 @@ class NoComponent(object):
 noComponent=NoComponent()
 
 class EffectModel(object):
-    def __init__(self,componentModel,*args):
-        self.componentModel=componentModel
+    def __init__(self,text:str,cost,*args):
+        self.text=text
+        self.cost=cost
         self.args=args
 
 class Effect(object):
     def __init__(self,effectModel,targetSelection=noComponent):
-        componentModel=effectModel.componentModel
-        self.componentModel=componentModel
         args=effectModel.args
         self.args=args
-        self.targetSelection=targetSelection
-        self.cost=componentModel.cost(targetSelection.cost,*args)
-        textModel=self.componentModel.text
+        self.cost=effectModel.cost(targetSelection.cost,*args)
+        textModel=effectModel.text
         # the first argument of the targetSelection is considered to be the number of targets
-        textArgs=map(TextArg,[self.targetSelection.args[0]]+list(args))
+        textArgs=map(TextArg,[targetSelection.args[0]]+list(args))
         self.text=textModel.format(*textArgs)
 
 class Ability(object):
