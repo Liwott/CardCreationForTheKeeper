@@ -56,8 +56,8 @@ class Effect(object):
         self.targetSelection=targetSelection
         self.cost=componentModel.cost(targetSelection.cost,*args)
         textModel=self.componentModel.text
-        # the last argument of the targetSelection is considered to be the number of targets
-        textArgs=map(TextArg,[self.targetSelection.args[-1]]+list(args))
+        # the first argument of the targetSelection is considered to be the number of targets
+        textArgs=map(TextArg,[self.targetSelection.args[0]]+list(args))
         self.text=textModel.format(*textArgs)
 
 class Ability(object):
