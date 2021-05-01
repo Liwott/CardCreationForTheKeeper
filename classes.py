@@ -24,12 +24,16 @@ class Component(object):
         self.args=args
         self.cost=cost(*args)
         textArgs=map(TextArg,list(args))
-        # argument 0 is empty and sould not be used in formatting
-        self.text=text.format(None,*textArgs)+' '
+        if text=="":
+            # avoid too much space
+            self.text=text
+        else:
+            # argument 0 is empty and sould not be used in formatting
+            self.text=text.format(None,*textArgs)+' '
 
 class NoComponent(object):
     def __init__(self):
-        self.args=[None]
+        self.args=[]
         self.cost=0
         self.text=""
 noComponent=NoComponent()
@@ -41,17 +45,21 @@ class EffectModel(object):
         self.args=args
 
 class Effect(object):
-    def __init__(self,effectModel,targetSelection=noComponent):
+    def __init__(self,effectModel,targetSelection):
         args=effectModel.args
         self.args=args
         self.cost=effectModel.cost(targetSelection.cost,*args)
         textModel=effectModel.text
-        # the first argument of the targetSelection is considered to be the number of targets
-        textArgs=map(TextArg,[targetSelection.args[0]]+list(args))
+        if len(targetSelection.args)==0:
+            # produces a non-empty argument for targets that should crash if it is called
+            textArgs=[None]+map(TextArg,list(args))
+        else:
+            # the first argument of the targetSelection is considered to be the number of targets
+            textArgs=map(TextArg,[targetSelection.args[0]]+list(args))
         self.text=textModel.format(*textArgs)
 
 class Ability(object):
-    def __init__(self, actCondition=noComponent,actCost=noComponent,targetSelection=noComponent, *effectModels):
+    def __init__(self, actCondition,actCost,targetSelection, *effectModels):
         self.actCondition=actCondition
         self.actCost=actCost
         self.targetSelection=targetSelection
@@ -79,7 +87,7 @@ class BareSpellCard(object):
         self.cost=max(1,math.ceil(ability.cost))
 
 class BareCreatureCard(object):
-    def __init__(self,offense:int,defense:int,caveat=noComponent,*abilities):
+    def __init__(self,offense:int,defense:int,caveat,*abilities):
         self.offense=offense
         self.defense=defense
         self.caveat=caveat

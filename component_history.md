@@ -2,7 +2,7 @@
 
 ##### v2
 
-- **1.x** “You must pay [x] hitpoints to summon this creature.” **(x/2)**
+- **1.x** “You must pay [x] hitpoints to summon this creature.” (x/2)
 - **2.x** “You must exhaust [x] of your unexhausted creatures in play to summon this creature.” (x)
 - **3.x** “You must exhaust [x] of your unexhausted cards in play chosen by an opponent of your choice to summon this creature.” (2x)
 - **4.x** “You must sacrifice [x] cards on the top of your deck to summon this creature.” (x)

@@ -7,6 +7,10 @@
         "1": "is",
         "2": "are"
     },
+    "each_target": {
+        "1": "the target",
+        "2": "each target"
+    },
     "s": {
         "1": "",
         "2": "s"
