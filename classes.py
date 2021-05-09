@@ -62,6 +62,9 @@ class BareSpellCard(object):
         self.ability=ability
         self.cost=max(1,math.ceil(ability.cost))
 
+    def __str__(self):
+        return "cost : "+str(self.cost)+"\n"+self.ability.text
+
 class BareCreatureCard(object):
     def __init__(self,offense:int,defense:int,caveat,*abilities):
         self.offense=offense
@@ -72,6 +75,20 @@ class BareCreatureCard(object):
         for ability in abilities:
             cost+=ability.cost
         self.cost=max(1,math.ceil(cost))
+
+    def __str__(self):
+        string="cost : "+str(self.cost)+"\noffense : "+str(self.offense)+"\ndefense : "+str(self.defense)+"\n"
+        if self.caveat.text=="":
+            string+="no caveat"
+        else:
+            string+="caveat : "+self.caveat.text
+        n=0
+        for ability in self.abilities:
+            n+=1
+            string+="\nability "+str(n)+" : "+ability.text
+        if n==0:
+            string+="\nno ability"
+        return string
 
 class TextArg(object):
     """Used as argument for text formatting"""
