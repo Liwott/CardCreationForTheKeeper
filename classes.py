@@ -1,29 +1,10 @@
 import math
 
-class TextArg(object):
-    """Used as argument for text formatting"""
-    formatters={'s':{'1':'','2':'s'}}
-
-    def __init__(self,number:int):
-        self.number=number
-
-    def __str__(self):
-        return str(self.number)
-
-    def __getattr__(self,attr):
-        if attr in TextArg.formatters:
-            if self.number == 1:
-                return TextArg.formatters[attr]['1']
-            else:
-                return TextArg.formatters[attr]['2']
-        else:
-            return '{{'+attr+'}}'
-
 class Component(object):
-    def __init__(self,text:str,cost,*args):
+    def __init__(self,text:str,formatters:dict,cost,*args):
         self.args=args
         self.cost=cost(*args)
-        textArgs=map(TextArg,list(args))
+        textArgs=map(lambda x:TextArg(x,formatters),list(args))
         if text=="":
             # avoid too much space
             self.text=text
@@ -31,16 +12,10 @@ class Component(object):
             # argument 0 is empty and sould not be used in formatting
             self.text=text.format(None,*textArgs)+' '
 
-class NoComponent(object):
-    def __init__(self):
-        self.args=[]
-        self.cost=0
-        self.text=""
-noComponent=NoComponent()
-
 class EffectModel(object):
-    def __init__(self,text:str,cost,*args):
+    def __init__(self,text:str,formatters:dict,cost,*args):
         self.text=text
+        self.formatters=formatters
         self.cost=cost
         self.args=args
 
@@ -50,12 +25,13 @@ class Effect(object):
         self.args=args
         self.cost=effectModel.cost(targetSelection.cost,*args)
         textModel=effectModel.text
+        formatters=effectModel.formatters
         if len(targetSelection.args)==0:
             # produces a non-empty argument for targets that should crash if it is called
-            textArgs=[None]+map(TextArg,list(args))
+            textArgs=[None]+map(lambda x:TextArg(x,formatters),list(args))
         else:
             # the first argument of the targetSelection is considered to be the number of targets
-            textArgs=map(TextArg,[targetSelection.args[0]]+list(args))
+            textArgs=map(lambda x:TextArg(x,formatters),[targetSelection.args[0]]+list(args))
         self.text=textModel.format(*textArgs)
 
 class Ability(object):
@@ -96,3 +72,22 @@ class BareCreatureCard(object):
         for ability in abilities:
             cost+=ability.cost
         self.cost=max(1,math.ceil(cost))
+
+class TextArg(object):
+    """Used as argument for text formatting"""
+
+    def __init__(self,number:int,formatters:dict={}):
+        self.number=number
+        self.formatters=formatters
+
+    def __str__(self):
+        return str(self.number)
+
+    def __getattr__(self,attr):
+        if attr in self.formatters:
+            if self.number == 1:
+                return self.formatters[attr]['1']
+            else:
+                return self.formatters[attr]['2']
+        else:
+            return '{{'+attr+'}}'

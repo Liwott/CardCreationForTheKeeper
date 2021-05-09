@@ -8,18 +8,23 @@ def createTypes(dataMapFile):
     file=open(dataMapFile)
     data=json.load(file)
     file.close()
+    file=open(data["Formatters"])
+    formatters=json.load(file)
+    file.close()
     for compo in ["Caveat","ActCondition","ActCost","TargetSelection","Effect"]:
-        types[compo]=ComponentType(compo,data[compo],data[compo+"Text"])
+        file=open(data[compo])
+        dataDict=json.load(file)
+        file.close()
+        file=open(data[compo+"Text"])
+        textDict=json.load(file)
+        file.close()
+        types[compo]=ComponentType(compo,dataDict,textDict,formatters)
 
 class ComponentType(object):
-    def __init__(self,name,dataFile,textFile):
-        self.name=name
-        file=open(dataFile)
-        self.data=json.load(file)
-        file.close()
-        file=open(textFile)
-        self.text=json.load(file)
-        file.close()
+    def __init__(self,name,dataDict,textDict,formatters):
+        self.data=dataDict
+        self.text=textDict
+        self.formatters=formatters
         self.isEffect=name=="Effect"
 
     def refComponent(self,ref):
@@ -34,9 +39,9 @@ class ComponentType(object):
         cost=lambdify(vars,data["cost"])
         text=self.text[model]
         if self.isEffect:
-            return c.EffectModel(text,cost,*args)
+            return c.EffectModel(text,self.formatters,cost,*args)
         else:
-            return c.Component(text,cost,*args)
+            return c.Component(text,self.formatters,cost,*args)
 
 def refAbility(ref):
     actConditionRef,actCostRef,targetSelectionRef,*effectModelRefs=ref.split('-')
