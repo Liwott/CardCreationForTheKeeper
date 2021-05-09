@@ -1,4 +1,74 @@
 import math
+import json
+from lambdify import lambdify
+
+class DataBase(object):
+    def __init__(self,dataMapFile):
+        types={}
+        file=open(dataMapFile)
+        data=json.load(file)
+        file.close()
+        file=open(data["Formatters"])
+        formatters=json.load(file)
+        file.close()
+        for compo in ["Caveat","ActCondition","ActCost","TargetSelection","Effect"]:
+            file=open(data[compo])
+            dataDict=json.load(file)
+            file.close()
+            file=open(data[compo+"Text"])
+            textDict=json.load(file)
+            file.close()
+            types[compo]=ComponentType(compo,dataDict,textDict,formatters)
+        self.types=types
+
+    def refAbility(self,ref):
+        actConditionRef,actCostRef,targetSelectionRef,*effectModelRefs=ref.split('-')
+        arguments=[]
+        arguments.append(self.types["ActCondition"].refComponent(actConditionRef))
+        arguments.append(self.types["ActCost"].refComponent(actCostRef))
+        arguments.append(self.types["TargetSelection"].refComponent(targetSelectionRef))
+        for effectModelRef in effectModelRefs:
+            arguments.append(self.types["Effect"].refComponent(effectModelRef))
+        return Ability(*arguments)
+
+    def refBareCard(self,ref):
+        if ref[0]=='S':
+            ability=self.refAbility(ref[2:])
+            return BareSpellCard(ability)
+        elif ref[0]=='C':
+            disabledCreatureRef,*abilityRefs=ref.split('/')
+            abilities=[]
+            for abilityRef in abilityRefs:
+                abilities.append(self.refAbility(abilityRef))
+            fighting,caveatRef=disabledCreatureRef.split('-')
+            C,offense,defense=fighting.split('.')
+            caveat=self.types["Caveat"].refComponent(caveatRef)
+            return BareCreatureCard(int(offense),int(defense),caveat,*abilities)
+        else:
+            raise ValueError(ref[0]+" is not a valid card type")
+
+class ComponentType(object):
+    def __init__(self,name,dataDict,textDict,formatters):
+        self.data=dataDict
+        self.text=textDict
+        self.formatters=formatters
+        self.isEffect=name=="Effect"
+
+    def refComponent(self,ref):
+        model,*strArgs=ref.split('.')
+        data=self.data[model]
+        vars=data['vars']
+        if len(strArgs)!=len(vars):
+            raise ValueError(self.name+' '+ref)
+        args=map(int,strArgs)
+        if self.isEffect:
+            vars=[data['targetCost']]+vars
+        cost=lambdify(vars,data["cost"])
+        text=self.text[model]
+        if self.isEffect:
+            return EffectModel(text,self.formatters,cost,*args)
+        else:
+            return Component(text,self.formatters,cost,*args)
 
 class Component(object):
     def __init__(self,text:str,formatters:dict,cost,*args):

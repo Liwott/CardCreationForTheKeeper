@@ -1,5 +1,4 @@
 def lambdify(vars:list,function:str):
-    """to be securised"""
     def lambdified(*args):
         res=function
         for var,arg in zip(vars,args):
