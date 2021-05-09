@@ -1,0 +1,13 @@
+{
+  "Formatters":"data/FormattersEN.json",
+  "Caveat":"data/Caveat.json",
+  "CaveatText":"data/CaveatEN.json",
+  "ActCondition":"data/ActCondition.json",
+  "ActConditionText":"data/ActConditionEN.json",
+  "ActCost":"data/ActCost.json",
+  "ActCostText":"data/ActCostEN.json",
+  "TargetSelection":"data/TargetSelection.json",
+  "TargetSelectionText":"data/TargetSelectionEN.json",
+  "Effect":"data/Effect.json",
+  "EffectText":"data/EffectEN.json"
+}

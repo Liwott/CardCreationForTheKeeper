@@ -1,8 +1,8 @@
 import classes as c
 import refProcessing as r
-r.setLocale('EN')
 import json
-formattersFile=open('Formatters/EN.json')
+r.createTypes("data/DataMapEN.json")
+formattersFile=open('data/FormattersEN.json')
 c.TextArg.formatters=json.load(formattersFile)
 formattersFile.close()
 

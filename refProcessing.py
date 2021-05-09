@@ -1,75 +1,51 @@
 import classes as c
 import json
+from lambdify import lambdify
 
-def lambdify(vars:list,function:str):
-    """to be securised"""
-    def lambdified(*args):
-        res=function
-        for var,arg in zip(vars,args):
-            res=res.replace(var,str(arg))
-        return evaluate(res)
-    return lambdified
-
-def evaluate(res:str):
-    """to be replaced with a parser"""
-    for carac in res:
-        if carac not in ' 0123456789+-*/.()':
-            raise ValueError(carac,function,vars,args)
-    return eval(res)
-
-def setLocale(locale):
-    global typeCaveat, typeActCondition, typeActCost, typeTargetSelection, typeEffectModel
-    typeCaveat=ComponentType('Caveat',locale)
-    typeActCondition=ComponentType('ActCondition',locale)
-    typeActCost=ComponentType('ActCost',locale)
-    typeTargetSelection=ComponentType('TargetSelection',locale)
-    typeEffectModel=ComponentType('Effect',locale)
+def createTypes(dataMapFile):
+    global types
+    types={}
+    file=open(dataMapFile)
+    data=json.load(file)
+    file.close()
+    for compo in ["Caveat","ActCondition","ActCost","TargetSelection","Effect"]:
+        types[compo]=ComponentType(compo,data[compo],data[compo+"Text"])
 
 class ComponentType(object):
-    def __init__(self,name,locale):
+    def __init__(self,name,dataFile,textFile):
         self.name=name
-        file=open(name+'/data.json')
+        file=open(dataFile)
         self.data=json.load(file)
         file.close()
-        file=open(name+'/'+locale+'.json')
+        file=open(textFile)
         self.text=json.load(file)
         file.close()
+        self.isEffect=name=="Effect"
 
     def refComponent(self,ref):
         model,*strArgs=ref.split('.')
         data=self.data[model]
         vars=data['vars']
         if len(strArgs)!=len(vars):
-            print(strArgs,vars)
             raise ValueError(self.name+' '+ref)
         args=map(int,strArgs)
+        if self.isEffect:
+            vars=[data['targetCost']]+vars
         cost=lambdify(vars,data["cost"])
         text=self.text[model]
-        return c.Component(text,cost,*args)
-
-    def refEffectModel(self,ref):
-        model,*strArgs=ref.split('.')
-        data=self.data[model]
-        vars=data['vars']
-        if len(strArgs)!=len(vars):
-            raise ValueError(args)
-        args=map(int,strArgs)
-        vars=[data['targetCost']]+vars
-        cost=lambdify(vars,data["cost"])
-        text=self.text[model]
-        return c.EffectModel(text,cost,*args)
-
-class BareCardCreator(object):
-    pass
+        if self.isEffect:
+            return c.EffectModel(text,cost,*args)
+        else:
+            return c.Component(text,cost,*args)
 
 def refAbility(ref):
     actConditionRef,actCostRef,targetSelectionRef,*effectModelRefs=ref.split('-')
     arguments=[]
-    arguments.append(typeActCondition.refComponent(actConditionRef))
-    arguments.append(typeActCost.refComponent(actCostRef))
-    arguments.append(typeTargetSelection.refComponent(targetSelectionRef))
+    arguments.append(types["ActCondition"].refComponent(actConditionRef))
+    arguments.append(types["ActCost"].refComponent(actCostRef))
+    arguments.append(types["TargetSelection"].refComponent(targetSelectionRef))
     for effectModelRef in effectModelRefs:
-        arguments.append(typeEffectModel.refEffectModel(effectModelRef))
+        arguments.append(types["Effect"].refComponent(effectModelRef))
     return c.Ability(*arguments)
 
 def refBareCard(ref):
@@ -83,7 +59,7 @@ def refBareCard(ref):
             abilities.append(refAbility(abilityRef))
         fighting,caveatRef=disableCreatureRef.split('-')
         C,offense,defense=fighting.split('.')
-        caveat=typeCaveat.refComponent(caveatRef)
+        caveat=types["Caveat"].refComponent(caveatRef)
         return c.BareCreatureCard(int(offense),int(defense),caveat,*abilities)
     else:
         raise ValueError(ref[0]+" is not a valid card type")
