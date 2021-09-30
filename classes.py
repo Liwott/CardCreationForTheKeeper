@@ -1,6 +1,5 @@
 import math
 import json
-from lambdify import lambdify
 
 class DataBase(object):
     def __init__(self,dataMapFile):
@@ -56,24 +55,18 @@ class ComponentType(object):
 
     def refComponent(self,ref):
         model,*strArgs=ref.split('.')
-        data=self.data[model]
-        vars=data['vars']
-        if len(strArgs)!=len(vars):
-            raise ValueError(self.name+' '+ref)
-        args=map(int,strArgs)
-        if self.isEffect:
-            vars=[data['targetCost']]+vars
-        cost=lambdify(vars,data["cost"])
+        cost=self.data[model]['cost']
         text=self.text[model]
+        args=map(int,strArgs)
         if self.isEffect:
             return EffectModel(text,self.formatters,cost,*args)
         else:
             return Component(text,self.formatters,cost,*args)
 
 class Component(object):
-    def __init__(self,text:str,formatters:dict,cost,*args):
+    def __init__(self,text:str,formatters:dict,cost:str,*args):
         self.args=args
-        self.cost=cost(*args)
+        self.cost=evaluate(cost,None,*args)
         textArgs=map(lambda x:TextArg(x,formatters),list(args))
         if text=="":
             # avoid too much space
@@ -93,7 +86,7 @@ class Effect(object):
     def __init__(self,effectModel,targetSelection):
         args=effectModel.args
         self.args=args
-        self.cost=effectModel.cost(targetSelection.cost,*args)
+        self.cost=evaluate(effectModel.cost,targetSelection.cost,*args)
         textModel=effectModel.text
         formatters=effectModel.formatters
         if len(targetSelection.args)==0:
@@ -178,3 +171,11 @@ class TextArg(object):
                 return self.formatters[attr]['2']
         else:
             return '{{'+attr+'}}'
+
+def evaluate(function:str,*mathArgs):
+    res=function.format(*mathArgs)
+    # what follows is to be replaced with a parser
+    for carac in res:
+        if carac not in ' 0123456789+-*/.()':
+            raise ValueError(carac,function,vars,args)
+    return eval(res)

@@ -1,3 +1,3 @@
-{"0":{"targetCost":"t","vars":[],"cost":"0"},
-"10":{"targetCost":"t","vars":[],"cost":"8*t"},
-"32":{"targetCost":"t","vars":["x"],"cost":"x*t"}}
+{"0":{"cost":"0"},
+"10":{"cost":"8*{0}"},
+"32":{"cost":"{1}*{0}"}}
