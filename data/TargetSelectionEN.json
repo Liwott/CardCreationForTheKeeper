@@ -1,3 +1,22 @@
-{"0":"",
+{
+  "0":"",
+  "1":"Target this card.",
+  "2":"Target up to {1} card{1.s} in play.",
   "3":"Target up to {1} card{1.s} in play with at least {2} counter{2.s}.",
-  "5":"Target up to {1} exhausted card{1.s} in play."}
+  "4":"Target up to {1} resource{1.s}.",
+  "5":"Target up to {1} exhausted card{1.s} in play.",
+  "6":"Target up to {1} card{1.s} in play selected by an opponent of your choice.",
+  "7":"Target up to {1} card{1.s} in the current chain.",
+  "8":"Target up to {1} card{1.s} in your hand.",
+  "9":"Target up to {1} card{1.s} in one player's hand randomly.",
+  "10":"Target up to {1} card{1.s} on the top of one player's deck.",
+  "11":"Target up to {1} card{1.s} in your graveyard.",
+  "12":"Target up to {1} card{1.s} in one player's graveyard randomly.",
+  "13":"Target up to {1} of your resources.",
+  "14":"Show all cards in your hand to one player of your choice and target up to {1} card{1.s} in your hand selected by that player.",
+  "15":"Target up to {1} card{1.s} in one opponent’s hand selected by that player.",
+  "16":"Have one opponent look at exactly {2} card{2.s} on top of your deck and target up to {1} of those cards selected by that player.",
+  "17":"Have one opponent look at exactly {2} card{2.s} on top of their own deck and target up to {1} of those cards selected by that player.",
+  "18":"Show all cards in your graveyard to an opponent of your choice and target up to {1} card{1.s} in your graveyard selected by that player.",
+  "19":"Target up to {1} card{1.s} in one opponent’s graveyard selected by that player."
+}

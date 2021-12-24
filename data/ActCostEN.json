@@ -1,1 +1,23 @@
-{"0":""}
+{
+  "0":"",
+  "1":"Remove {1} counter{1.s} from this card.",
+  "2":"Pay {1} hitpoint{1.s}.",
+  "3":"Exhaust {1} of your unexhausted cards in play.",
+  "4":"Exhaust {1} of your unexhausted cards in play chosen by an opponent of your choice.",
+  "5":"Sacrifice {1} card{1.s} on the top of your deck.",
+  "6":"Sacrifice {1} random card{1.s} in your hand.",
+  "7":"Sacrifice {1} card{1.s} in play.",
+  "8":"Sacrifice {1} card{1.s} in play chosen by an opponent of your choice.",
+  "9":"Exhaust {1} of your unexhausted creatures in play.",
+  "10":"Exhaust {1} of your unexhausted creatures in play chosen by an opponent of your choice.",
+  "11":"Destroy {1} card{1.s} on the top of your deck.",
+  "12":"Destroy {1} random card{1.s} in your hand.",
+  "13":"Destroy {1} of your cards in play.",
+  "14":"Destroy {1} of your cards in play chosen by an opponent of your choice.",
+  "15":"Destroy {1} of your resources.",
+  "16":"Destroy {1} of your resources chosen by an opponent of your choice.",
+  "17":"Pay {1} hitpoint{1.s}.",
+  "18":"Exhaust {1} of your resources.",
+  "19":"Sacrifice {1} card{1.s} on the top of your deck.",
+  "20":"Destroy {1} card{1.s} on the top of your deck."
+}
