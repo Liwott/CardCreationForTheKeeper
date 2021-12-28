@@ -12,6 +12,7 @@ set=json.load(file)
 file.close()
 for name,ref in set.items():
     print(name+ " (EN)")
+    print(ref)
     print(dbEN.refBareCard(ref))
     print("")
 

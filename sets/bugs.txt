@@ -1,0 +1,21 @@
+cost disagreements found when running example.py with the data in cards.json
+
+Bloodborne Transmission (EN)
+S/0-10.1-2.2-5.1
+cost : 4
+Exhaust 1 of your unexhausted creatures in play chosen by an opponent of your choice. Target up to 2 cards in play. Place 1 weakness counter on each target. You can remove a weakness counter from a card at any time to decrease its offense by 1.
+
+Show of Aggression (EN)
+S/17.1-0-5.2-17
+cost : 2
+Activate when at least 1 of your cards in play (excluding this card) is damaged, but not destroyed. Target up to 2 exhausted cards in play. Place all targets on top of owner's deck in any order.
+
+Spirit Board (EN)
+C.0.10-20/0-0-1-32.2/0-1.2-0-29.3/0-1.2-0-25.3
+cost : 5
+offense : 0
+defense : 10
+caveat : This creature cannot attack.
+ability 1 : Target this card. Place 2 counters on the target.
+ability 2 : Remove 2 counters from this card. Roll 3 six-sided dice and increase your hitpoints by the result, then roll 3 six-sided dice and increase the hitpoints of one opponent by the result.
+ability 3 : Remove 2 counters from this card. Roll 3 six-sided dice and inflict the result as damage to yourself, then roll 3 six-sided dice and inflict the result as damage to any one player.
