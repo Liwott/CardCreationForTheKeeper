@@ -25,6 +25,9 @@ class DataBase(object):
         arguments=[]
         arguments.append(self.types["ActCondition"].refComponent(actConditionRef))
         arguments.append(self.types["ActCost"].refComponent(actCostRef))
+        if targetSelectionRef=="1":
+            # "this target" has an implicit argument
+            targetSelectionRef="1.1"
         arguments.append(self.types["TargetSelection"].refComponent(targetSelectionRef))
         for effectModelRef in effectModelRefs:
             arguments.append(self.types["Effect"].refComponent(effectModelRef))
@@ -91,11 +94,11 @@ class Effect(object):
         formatters=effectModel.formatters
         if len(targetSelection.args)==0:
             # produces a non-empty argument for targets that should crash if it is called
-            textArgs=[None]+map(lambda x:TextArg(x,formatters),list(args))
+            textArgs=[None]+list(map(lambda x:TextArg(x,formatters),list(args)))
         else:
             # the first argument of the targetSelection is considered to be the number of targets
             textArgs=map(lambda x:TextArg(x,formatters),[targetSelection.args[0]]+list(args))
-        self.text=textModel.format(*textArgs)
+        self.text=textModel.format(*textArgs)+' '
 
 class Ability(object):
     def __init__(self, actCondition,actCost,targetSelection, *effectModels):

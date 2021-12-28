@@ -1,1 +1,25 @@
-{"0":"","18":"Activate when at least {1} of your cards in play (excluding this card) {1.are} destroyed.","19":"Activate when at least {1} card{1.s} in your hand {1.are} destroyed."}
+{
+  "0":"",
+  "1":"Activate in response to an opponent's summon.",
+  "2":"Activate in response to an opponent's attack.",
+  "3":"Activate in response to an opponent's card effect.",
+  "4":"Activate when this in-play card is destroyed.",
+  "5":"Activate when this card as a resource is destroyed.",
+  "6":"Activate when this card in your hand is destroyed.",
+  "7":"Activate when this card in your deck is destroyed.",
+  "8":"Activate when another of your cards in play is destroyed.",
+  "9":"Activate when a card in your hand is destroyed.",
+  "10":"Activate when a card in your deck is destroyed.",
+  "11":"Activate when you take damage.",
+  "12":"Activate when this card is damaged, but not destroyed.",
+  "13":"Activate when another of your cards in play is damaged, but not destroyed.",
+  "14":"Activate when this card as a resource is destroyed by paying this card’s resource cost.",
+  "15":"Activate when this card in your hand is destroyed by paying this card’s resource cost.",
+  "16":"Activate when this card in your deck is destroyed by paying this card’s resource cost.",
+  "17":"Activate when at least {1} of your cards in play (excluding this card) {1.are} damaged, but not destroyed.",
+  "18":"Activate when at least {1} of your cards in play (excluding this card) {1.are} destroyed.",
+  "19":"Activate when at least {1} card{1.s} in your hand {1.are} destroyed.",
+  "20":"Activate when at least {1} card{1.s} in your deck {1.are} destroyed.",
+  "21":"Activate when your cards in play take a total of at least {1} damage.",
+  "22":"Activate when you take at least {1} damage."
+}

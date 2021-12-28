@@ -1,18 +1,42 @@
 {
-    "all_targets": {
-        "1": "the target",
-        "2": "all targets"
-    },
-    "are": {
-        "1": "is",
-        "2": "are"
-    },
-    "each_target": {
-        "1": "the target",
-        "2": "each target"
-    },
-    "s": {
-        "1": "",
-        "2": "s"
-    }
+  "all_targets": {
+    "1": "the target",
+    "2": "all targets"
+  },
+  "are": {
+    "1": "is",
+    "2": "are"
+  },
+  "a_total_of_": {
+    "1":"",
+    "2":"a total of "
+  },
+  "_each":{
+    "1":"",
+    "2":" each"
+  },
+  "each_target": {
+    "1": "the target",
+    "2": "each target"
+  },
+  "_of_each_die":{
+    "1":"",
+    "2":" of each die"
+  },
+  "one_target":{
+    "1":"the target",
+    "2":"one target"
+  },
+  "s": {
+    "1": "",
+    "2": "s"
+  },
+  "targets": {
+    "1": "the target",
+    "2": "targets"
+  },
+  "targets_": {
+    "1": "the target's",
+    "2": "targets'"
+  }
 }
