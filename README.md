@@ -6,7 +6,7 @@ It consists in a card referencing system and the python package `ccftk` that use
 The components' (i.e. caveats, activation conditions and costs, target selections and effects) references are listed in the file `data/componentHistory.md`.
 An ability's reference is
 ```
-(activation condition)-(activation cost)-(target selection reference)-(effect 1)-(effect 2)-...
+(activation condition)-(activation cost)-(target selection)-(effect 1)-(effect 2)-...
 ```
 A spell card's reference is
 ```
