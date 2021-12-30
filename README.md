@@ -24,6 +24,11 @@ import ccftk
 dbEN=ccftk.DataBase("data/DataMapEN.json")
 ```
 This database object has a `refBareCard` method that allows to generate the text and cost of a card from its reference, as well as a `refAbility` method that does that for a single ability.
+For example, characteristics of the (10th edition version of the) "Anubis" card are printed via
+```
+print(dbEN.refBareCard('C.5.25-6.3/18.1-0-5.2-32.2/0-0-3.1.2-10'))
+```
+Combination with appropriate decoding packages can be used to generate the card texts for sets, as illustrated in the `example.py` file.
 
 ## Future directions
 - add documentation
