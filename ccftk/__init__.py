@@ -45,6 +45,53 @@ class DataBase(object):
             return BareCreatureCard(int(offense),int(defense),caveat,*abilities)
         else:
             raise ValueError(ref[0]+" is not a valid card type")
+        
+    def inputAbility(self):
+        # issues to be addressed :
+        # - language
+        # - checking validity of effectModel
+        while True:
+            actConditionRef=input("What is the reference of the activation condition? ")
+            try:
+                actCondition=self.types["ActCondition"].refComponent(actConditionRef)
+                break
+            except:
+                print(actConditionRef+" is not a valid reference.")
+        while True:
+            actCostRef=input("What is the reference of the activation cost? ")
+            try:
+                actCost=self.types["ActCost"].refComponent(actCostRef)
+                break
+            except:
+                print(actCostRef+" is not a valid reference.")    
+        while True:
+            targetSelectionRef=input("What is the reference of the target selection? ")
+            try:
+                targetSelection=self.types["TargetSelection"].refComponent(targetSelectionRef)
+                break
+            except:
+                print(targetSelectionRef+" is not a valid reference.")
+        effectModels=[]
+        while True:
+            effectRef=input("What is the reference of the first effect? ")
+            try:
+                effect=self.types["Effect"].refComponent(effectRef)
+                effectModels.append(effect)
+                break
+            except:
+                print(effectRef+" is not a valid reference.")
+        while effectRef!="0":
+            while True:
+                effectRef=input("What is the reference of the next effect? (type '0' if there is no other effect) ")
+                if effectRef=="0":
+                    break
+                try:
+                    effect=self.types["TargetSelection"].refComponent(targetSelectionRef)
+                    effectModels.append(effect)
+                    break
+                except:
+                    print(effectRef+" is not a valid reference.")
+        return Ability(actCondition,actCost,targetSelection,*effectModels)
 
 class ComponentType(object):
     def __init__(self,name,dataDict,textDict,formatters):
