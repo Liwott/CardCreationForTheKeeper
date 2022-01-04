@@ -1,5 +1,4 @@
 {
-  "0":"",
   "1":"Place {1} counter{1.s} on {0.each_target}.",
   "2":"Remove up to {1} counter{1.s} from {0.each_target}.",
   "3":"Place {1} offense counter{1.s} on {0.each_target}. You can remove an offense counter from a card at any time to increase its offense by 1.",

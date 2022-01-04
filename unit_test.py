@@ -19,7 +19,7 @@ for i in range(23):
     for x in ["1","4"]:
         comp=str(i)+"."+x
         print(comp)
-        ref="S/"+comp+"-0-0-0"
+        ref="S/"+comp+"-0-1-7"
         try:
             print(dbEN.refBareCard(ref))
         except:
@@ -30,7 +30,7 @@ for i in range(21):
     for x in ["1","4"]:
         comp=str(i)+"."+x
         print(comp)
-        ref="S/0-"+comp+"-0-0"
+        ref="S/0-"+comp+"-1-7"
         try:
             print(dbEN.refBareCard(ref))
         except:
@@ -42,14 +42,14 @@ for i in range(20):
         for y in ["1","4"]:
             comp=str(i)+"."+x+"."+y
             print(comp)
-            ref="S/0-0-"+comp+"-0"
+            ref="S/0-0-"+comp+"-7"
             try:
                 print(dbEN.refBareCard(ref))
             except:
                 print("Fail")
 
 print("Effect")
-for i in range(35):
+for i in range(1,35):
     for t in ["1","4"]:
         for x in ["1","4"]:
             for y in ["1","4"]:

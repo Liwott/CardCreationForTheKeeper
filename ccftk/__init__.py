@@ -25,9 +25,6 @@ class DataBase(object):
         arguments=[]
         arguments.append(self.types["ActCondition"].refComponent(actConditionRef))
         arguments.append(self.types["ActCost"].refComponent(actCostRef))
-        if targetSelectionRef=="1":
-            # "this target" has an implicit argument
-            targetSelectionRef="1.1"
         arguments.append(self.types["TargetSelection"].refComponent(targetSelectionRef))
         for effectModelRef in effectModelRefs:
             arguments.append(self.types["Effect"].refComponent(effectModelRef))
@@ -54,6 +51,7 @@ class ComponentType(object):
         self.data=dataDict
         self.text=textDict
         self.formatters=formatters
+        self.isTargetSelection=name=="TargetSelection"
         self.isEffect=name=="Effect"
 
     def refComponent(self,ref):
@@ -63,6 +61,9 @@ class ComponentType(object):
         args=map(int,strArgs)
         if self.isEffect:
             return EffectModel(text,self.formatters,cost,*args)
+        elif self.isTargetSelection and ref=="1":
+            # "this card" means there is one target
+            return Component(text,self.formatters,cost,1)
         else:
             return Component(text,self.formatters,cost,*args)
 
