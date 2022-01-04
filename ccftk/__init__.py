@@ -78,6 +78,9 @@ class Component(object):
         else:
             # argument 0 is empty and sould not be used in formatting
             self.text=text.format(None,*textArgs)+' '
+            
+    def __str__(self):
+        return "cost : "+str(self.cost)+"\n"+self.text
 
 class EffectModel(object):
     def __init__(self,text:str,formatters:dict,cost,*args):
@@ -100,6 +103,9 @@ class Effect(object):
             # the first argument of the targetSelection is considered to be the number of targets
             textArgs=map(lambda x:TextArg(x,formatters),[targetSelection.args[0]]+list(args))
         self.text=textModel.format(*textArgs)+' '
+        
+    def __str__(self):
+        return "cost : "+str(self.cost)+"\n"+self.text
 
 class Ability(object):
     def __init__(self, actCondition,actCost,targetSelection, *effectModels):
@@ -123,6 +129,9 @@ class Ability(object):
         for effect in self.effects:
             text+=effect.text
         self.text=text
+        
+    def __str__(self):
+        return "cost : "+str(self.cost)+"\n"+self.text
 
 class BareSpellCard(object):
     def __init__(self,ability):
