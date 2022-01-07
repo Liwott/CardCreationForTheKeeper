@@ -86,7 +86,7 @@ class DataBase(object):
                 if effectRef=="0":
                     break
                 try:
-                    effect=self.types["TargetSelection"].refComponent(targetSelectionRef)
+                    effect=self.types["Effect"].refComponent(effectRef)
                     effectModels.append(effect)
                     break
                 except:
