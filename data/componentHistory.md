@@ -1,4 +1,7 @@
+(to fix)
 #### Caveats
+
+- **0** No caveat
 
 ##### v2
 
@@ -65,6 +68,8 @@
 
 #### Activation Conditions
 
+- **0** No activation condition
+
 ##### v1
 
 - **1** “Activate in response to an opponent's summon.” (0)
@@ -122,6 +127,8 @@
 
 #### Activation Costs
 
+- **0** No activation cost
+
 ##### v1
 
 - **1.x** “Remove [x] counters from this card.” (2x)
@@ -169,6 +176,8 @@
 - *redacting* **20**
 
 #### Target Selections
+
+- **0** No target
 
 ##### v1
 
