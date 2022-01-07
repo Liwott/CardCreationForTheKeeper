@@ -50,47 +50,15 @@ class DataBase(object):
         # issues to be addressed :
         # - language
         # - checking validity of effectModel
-        while True:
-            actConditionRef=input("What is the reference of the activation condition? ")
-            try:
-                actCondition=self.types["ActCondition"].refComponent(actConditionRef)
-                break
-            except:
-                print(actConditionRef+" is not a valid reference.")
-        while True:
-            actCostRef=input("What is the reference of the activation cost? ")
-            try:
-                actCost=self.types["ActCost"].refComponent(actCostRef)
-                break
-            except:
-                print(actCostRef+" is not a valid reference.")    
-        while True:
-            targetSelectionRef=input("What is the reference of the target selection? ")
-            try:
-                targetSelection=self.types["TargetSelection"].refComponent(targetSelectionRef)
-                break
-            except:
-                print(targetSelectionRef+" is not a valid reference.")
-        effectModels=[]
-        while True:
-            effectRef=input("What is the reference of the first effect? ")
-            try:
-                effect=self.types["Effect"].refComponent(effectRef)
-                effectModels.append(effect)
-                break
-            except:
-                print(effectRef+" is not a valid reference.")
-        while effectRef!="0":
-            while True:
-                effectRef=input("What is the reference of the next effect? (type '0' if there is no other effect) ")
-                if effectRef=="0":
-                    break
-                try:
-                    effect=self.types["Effect"].refComponent(effectRef)
-                    effectModels.append(effect)
-                    break
-                except:
-                    print(effectRef+" is not a valid reference.")
+        print("Welcome to the ability creator. Take in front of you the list of referenced components.")
+        print("Choose an activation condition.")
+        actCondition=self.types["ActCondition"].inputComponent()
+        print("Choose an activation cost.")
+        actCost=self.types["ActCost"].inputComponent()
+        print("Choose the rule of selection of the targets on which the effects will be applied.")
+        targetSelection=self.types["TargetSelection"].inputComponent()
+        print("Choose the effects one by one.")
+        effectModels=self.types["Effect"].inputEffectModels()
         return Ability(actCondition,actCost,targetSelection,*effectModels)
 
 class ComponentType(object):
@@ -113,6 +81,32 @@ class ComponentType(object):
             return Component(text,self.formatters,cost,1)
         else:
             return Component(text,self.formatters,cost,*args)
+    
+    def inputComponent(self):
+        while True:
+            ref=input("What is the reference? ")
+            try:
+                return self.refComponent(ref)
+            except:
+                print(ref+" is not a valid reference.")
+                
+    def inputEffectModels(self):
+        print("Choose the first effect.")
+        effectModels=[self.inputComponent()]
+        effectRef=""
+        while effectRef!="0":
+            while True:
+                print("Choose the next effect (or give '0' as a reference is there is no other effect).")
+                effectRef=input("What is the reference? ")
+                try:
+                    effect=self.refComponent(effectRef)
+                    effectModels.append(effect)
+                    break
+                except:
+                    if effectRef=="0":
+                        break
+                    print(effectRef+" is not a valid reference.")
+        return effectModels
 
 class Component(object):
     def __init__(self,text:str,formatters:dict,cost:str,*args):
