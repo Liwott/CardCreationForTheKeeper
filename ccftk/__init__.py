@@ -8,7 +8,7 @@ class DataBase(object):
         data=json.load(file)
         file.close()
         file=open(data["Formatters"])
-        formatters=json.load(file)
+        self.formatters=json.load(file)
         file.close()
         for compo in ["Caveat","ActCondition","ActCost","TargetSelection","Effect"]:
             file=open(data[compo])
@@ -17,8 +17,10 @@ class DataBase(object):
             file=open(data[compo+"Text"])
             textDict=json.load(file)
             file.close()
-            types[compo]=ComponentType(compo,dataDict,textDict,formatters)
+            types[compo]=ComponentType(compo,dataDict,textDict,self.formatters)
         self.types=types
+        
+    # building from reference
 
     def refAbility(self,ref):
         actConditionRef,actCostRef,targetSelectionRef,*effectModelRefs=ref.split('-')
@@ -46,11 +48,39 @@ class DataBase(object):
         else:
             raise ValueError(ref[0]+" is not a valid card type")
         
-    def inputAbility(self):
-        # issues to be addressed :
-        # - language
-        # - checking validity of effectModel
-        print("Welcome to the ability creator. Take in front of you the list of referenced components.")
+    # building from cli input
+    
+    # issues to be addressed :
+    # - language
+    # - checking validity of effectModel
+    # - checking arguments
+    # - quitting
+    # - confirming
+    
+    def inputBool(self,question):
+        # will be relevantly in the class with language
+        answer=input(question+"\n(type 'y' for yes and 'n' for no) ")
+        if answer=='y':
+            return True
+        elif answer=='n':
+            return False
+        else:
+            print("Must be 'y' or 'n'.")
+            return inputBool(question)
+
+    def inputInt(self,question):
+        # will be relevantly in the class with language
+        try:
+            return int(input(question+" "))
+        except:
+            print("Must be an integer.")
+            return inputInt(question)
+        
+    def inputAbility(self,welcome=True):
+        if welcome:
+            print("Welcome to the ability creation helper, that will guide you through choosing the components that make up the ability. Take in front of you the list of referenced components.")
+        else:
+            print("Choose the components of the ability one by one.")
         print("Choose an activation condition.")
         actCondition=self.types["ActCondition"].inputComponent()
         print("Choose an activation cost.")
@@ -60,6 +90,38 @@ class DataBase(object):
         print("Choose the effects one by one.")
         effectModels=self.types["Effect"].inputEffectModels()
         return Ability(actCondition,actCost,targetSelection,*effectModels)
+        
+    def inputBareSpellCard(self,welcome=True):
+        if welcome:
+            print("Welcome to the bare card creation helper, that will guide you through choosing the components that make up the card. Take in front of you the list of referenced components.")
+        print("A spell consists in exactly one ability.")
+        return BareSpellCard(self.inputAbility(welcome=False))
+
+    def inputBareCreatureCard(self,welcome=True):
+        if welcome:
+            print("Welcome to the bare card creation helper, that will guide you through choosing the components that make up the card. Take in front of you the list of referenced components.")
+        print("A creature consists in fighting skills, possibly one caveat and possibly one or more abilities.")
+        offense=self.inputInt("What is the offense?")
+        defense=self.inputInt("What is the defense?")
+        print("Choose a caveat.")
+        caveat=self.types["Caveat"].inputComponent()
+        abilities=[]
+        abilityCount=TextArg(1,self.formatters)
+        plural=TextArg(2,self.formatters)
+        # this supposes the existence of an "_other" formatter, the question will go altogether in a language-specific file in a future version
+        while self.inputBool("Is there at least one{0._other} ability?".format(abilityCount)):
+            abilities.append(self.inputAbility(welcome=False))
+            abilityCount=plural
+        return BareCreatureCard(offense,defense,caveat,*abilities)
+
+    def inputBareCard(self,welcome=True):
+        if welcome:
+            print("Welcome to the bare card creation helper, that will guide you through choosing the components that make up the card. Take in front of you the list of referenced components.")
+        if self.inputBool("Is it a spell card?"):
+            return self.inputBareSpellCard(welcome=False)
+        else:
+            return self.inputBareCreatureCard(welcome=False)
+
 
 class ComponentType(object):
     def __init__(self,name,dataDict,textDict,formatters):
@@ -68,6 +130,8 @@ class ComponentType(object):
         self.formatters=formatters
         self.isTargetSelection=name=="TargetSelection"
         self.isEffect=name=="Effect"
+        
+    # building from reference
 
     def refComponent(self,ref):
         model,*strArgs=ref.split('.')
@@ -81,6 +145,8 @@ class ComponentType(object):
             return Component(text,self.formatters,cost,1)
         else:
             return Component(text,self.formatters,cost,*args)
+            
+    # building from cli input
     
     def inputComponent(self):
         while True:
