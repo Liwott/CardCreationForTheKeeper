@@ -1,6 +1,8 @@
 # CardCreationForTheKeeper
 Card Creation helper for the game https://github.com/kotc-game/kotc.
 It consists in a card referencing system and the python package `ccftk` that uses it to generate cards' cost and text.
+This whole repo is licensed under the MIT licence.
+The `input` method were partially inspired by the cost calculator tool of the [kotc project](https://github.com/kotc-game/kotc), although no code was directly taken from there.
 
 ## Referencing system
 The components' (i.e. caveats, activation conditions and costs, target selections and effects) references are listed in the file `data/componentHistory.md`.
